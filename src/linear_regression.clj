@@ -30,12 +30,12 @@
 (defn- calc-descent-matrix [X y Theta]
   (matrix/mmul
     (matrix/transpose X)
-    (matrix/ereduce (matrix/mmul X Theta) y)))
+    (matrix/sub (matrix/mmul X Theta) y)))
 
 (defn- perform-one-step-gradient-decent [X y Theta alpha]
   (let [m (matrix/row-count X)
         descent (matrix/emul (/ alpha m) (calc-descent-matrix X y Theta))]
-    (matrix/ereduce Theta descent)))
+    (matrix/sub Theta descent)))
 
 (defn- create-initial-theta [n]
   (matrix/broadcast [0] [(inc n) 1]))
