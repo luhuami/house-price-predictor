@@ -10,7 +10,7 @@
 (defn- same-row-count? [X y]
   (= (matrix/row-count X) (matrix/row-count y)))
 
-;note vector and matrix are different
+;note vector and matrix are different. y must be a matrix rather a vector
 (defn- valid? [X y]
   (and
     (matrix/matrix? X)
@@ -23,7 +23,7 @@
   (matrix/broadcast [1] [m 1]))
 
 (defn- add-bias [X]
-  (let [bias-column (create-bias-column (first (matrix/shape X)))]
+  (let [bias-column (create-bias-column (matrix/row-count X))]
     (matrix/join-along 1 bias-column X)))
 
 ; Descent-Matrix = X' * (X * Theta - y)
@@ -38,7 +38,7 @@
     (matrix/sub Theta descent)))
 
 (defn- create-initial-theta [n]
-  (matrix/broadcast [0] [(inc n) 1]))
+  (matrix/broadcast [0] [n 1]))
 
 (defn perform-batch-gradient-decent [training-set y alpha iter]
   (let [X (add-bias training-set)]
