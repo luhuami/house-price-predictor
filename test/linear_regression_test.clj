@@ -2,7 +2,7 @@
     (:require [clojure.test :refer :all]
               [clojure.string :refer :all]
               [clojure.core.matrix :as matrix]
-              [linear-regression.linear-regression :as lr]))
+              [linear-regression :as lr]))
 
 
 (def row-data (slurp "test/resource/data.txt"))
