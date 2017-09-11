@@ -1,4 +1,4 @@
-(ns linear-regression.linear-regression
+(ns linear-regression
   (:require [clojure.core.matrix :as matrix]))
 
 (defn- not-empty? [X y]
@@ -34,7 +34,7 @@
 
 (defn- perform-one-step-gradient-decent [X y Theta alpha]
   (let [m (matrix/row-count X)
-        descent (matrix/emul (/ alpha m) (calc-descent-matrix X y Theta))]
+        descent (matrix/mul (/ alpha m) (calc-descent-matrix X y Theta))]
     (matrix/sub Theta descent)))
 
 (defn- create-initial-theta [n]
