@@ -1,4 +1,4 @@
-(ns house-price-predictor.core
+(ns core
   (:gen-class))
 
 (defn -main

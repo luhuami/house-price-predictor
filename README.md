@@ -36,4 +36,6 @@ Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
 todo:
-1. find best way to create an empty matrix or drop a column
+1. find a way to read big data rather than using slurp. stream?
+2. async read/process the data
+3. property based unit test case

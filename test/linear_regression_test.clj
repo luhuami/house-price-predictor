@@ -2,7 +2,8 @@
     (:require [clojure.test :refer :all]
               [clojure.string :refer :all]
               [clojure.core.matrix :as matrix]
-              [linear-regression :as lr]))
+              [linear-regression :as lr]
+              [utils.feature-scaling :as fs]))
 
 
 (def row-data (slurp "test/resource/data.txt"))
@@ -22,6 +23,10 @@
 (def y-list (map last (partition 3 arr2)))
 
 (def y (matrix/matrix (map vector y-list)))
+
+;(lr/perform-batch-gradient-decent (fs/scale X) y 0.01 50)
+
+(lr/perform-batch-gradient-decent (fs/scale X) (fs/scale y) 0.01 50)
 
 
 

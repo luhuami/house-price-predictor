@@ -1,4 +1,4 @@
-(ns feature-scaling
+(ns utils.feature-scaling
   (:require [clojure.core.matrix :as matrix]))
 
 (defn- scale-column [matrix column]
