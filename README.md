@@ -39,3 +39,4 @@ todo:
 1. find a way to read big data rather than using slurp. stream?
 2. async read/process the data
 3. property based unit test case
+4. auto-recognize number of columns in a given data set. complete invoke code for linear regresion
