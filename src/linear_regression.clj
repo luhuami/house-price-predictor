@@ -1,24 +1,6 @@
 (ns linear-regression
   (:require [clojure.core.matrix :as matrix]))
 
-(defn- not-empty? [X y]
-  (and
-    (> (matrix/row-count X) 0)
-    (> (matrix/column-count X) 0)
-    (> (matrix/row-count y) 0)))
-
-(defn- same-row-count? [X y]
-  (= (matrix/row-count X) (matrix/row-count y)))
-
-;note vector and matrix are different. y must be a matrix rather a vector
-(defn- valid? [X y]
-  (and
-    (matrix/matrix? X)
-    (matrix/matrix? y)
-    (not-empty? X y)
-    (= 1 (matrix/column-count y))
-    (same-row-count? X y)))
-
 (defn- create-bias-column [m]
   (matrix/broadcast [1] [m 1]))
 
@@ -26,7 +8,7 @@
   (let [bias-column (create-bias-column (matrix/row-count X))]
     (matrix/join-along 1 bias-column X)))
 
-; Descent-Matrix = X' * (X * Theta - y)
+;Descent-Matrix = X' * (X * Theta - y)
 (defn- calc-descent-matrix [X y Theta]
   (matrix/mmul
     (matrix/transpose X)
