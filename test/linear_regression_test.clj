@@ -5,31 +5,35 @@
               [linear-regression :as lr]
               [utils.feature-normalize :as fs]))
 
+(defn- parse-to-array [file-path]
+  (let [file (slurp file-path)
+        line-seq (split-lines file)]
+    (map #(split % #",") line-seq)))
 
-(def row-data (slurp "test/resource/linear/regression/multi-feature.txt"))
+(defn- parse-to-x-matrix [file-path]
+  (let[arr (parse-to-array file-path)
+       column-num (dec (count (first arr)))]
+    (matrix/submatrix (matrix/matrix arr) 1 [0 column-num])))
 
-(def row-arr (split-lines row-data))
+(defn- parse-to-y-matrix [file-path]
+  (let[arr (parse-to-array file-path)
+       column-num (dec (count (first arr)))]
+    (matrix/submatrix (matrix/matrix arr) 1 [column-num 1])))
 
-(def arr (map #(split % #",") row-arr))
+(defn- parse-y [file-path type-func]
+  (let [y (parse-to-y-matrix file-path)]
+    (matrix/matrix (matrix/emap type-func y))))
 
-(def arr1 (flatten arr))
+(defn- parse-X [file-path type-func]
+  (let [X (parse-to-x-matrix file-path)]
+    (matrix/matrix (matrix/emap type-func X))))
 
-(def arr2 (map #(Integer/parseInt %) arr1))
-;(def arr2 (map #(Double/parseDouble %) arr1))
+(def int-func #(Integer/parseInt %))
 
-(def x-list (partition 2 3 arr2))
-;(def x-list (partition 1 2 arr2))
+(def double-func #(Double/parseDouble %))
 
-(def X (matrix/matrix x-list))
+(def X (parse-X "test/resource/linear/regression/single-feature.txt" double-func))
 
-(def y-list (map last (partition 3 arr2)))
-;(def y-list (map last (partition 2 arr2)))
-
-(def y (matrix/matrix (map vector y-list)))
-
-;(lr/perform-batch-gradient-decent (fs/scale X) y 0.01 50)
+(def y (parse-y "test/resource/linear/regression/single-feature.txt" double-func))
 
 (lr/perform-batch-gradient-decent (fs/normalize X) y 0.01 50)
-
-
-
