@@ -1,4 +1,4 @@
-(ns utils.validator
+(ns utils.validation
   (:require [clojure.core.matrix :as matrix]))
 
 (defn- not-empty? [X y]
