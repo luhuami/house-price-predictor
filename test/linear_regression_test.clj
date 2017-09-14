@@ -1,39 +1,17 @@
 (ns linear-regression-test
     (:require [clojure.test :refer :all]
               [clojure.string :refer :all]
-              [clojure.core.matrix :as matrix]
               [linear-regression :as lr]
-              [utils.feature-normalize :as fs]))
+              [utils.feature-normalize :as fs]
+              [utils.read :as r]))
 
-(defn- parse-to-array [file-path]
-  (let [file (slurp file-path)
-        line-seq (split-lines file)]
-    (map #(split % #",") line-seq)))
+;ex1 uses alpha 0.01 and 1500 iteration without normalization. thata is [-3.630291 1.166362]
+(defn- test-single-feature []
+  (let[X (r/parse-X "test/resource/linear/regression/single-feature.txt" r/double-parser)
+       y (r/parse-y "test/resource/linear/regression/single-feature.txt" r/double-parser)]
+    (lr/perform-batch-gradient-decent X y 0.01 1500)))
 
-(defn- parse-to-x-matrix [file-path]
-  (let[arr (parse-to-array file-path)
-       column-num (dec (count (first arr)))]
-    (matrix/submatrix (matrix/matrix arr) 1 [0 column-num])))
-
-(defn- parse-to-y-matrix [file-path]
-  (let[arr (parse-to-array file-path)
-       column-num (dec (count (first arr)))]
-    (matrix/submatrix (matrix/matrix arr) 1 [column-num 1])))
-
-(defn- parse-y [file-path type-func]
-  (let [y (parse-to-y-matrix file-path)]
-    (matrix/matrix (matrix/emap type-func y))))
-
-(defn- parse-X [file-path type-func]
-  (let [X (parse-to-x-matrix file-path)]
-    (matrix/matrix (matrix/emap type-func X))))
-
-(def int-func #(Integer/parseInt %))
-
-(def double-func #(Double/parseDouble %))
-
-(def X (parse-X "test/resource/linear/regression/single-feature.txt" double-func))
-
-(def y (parse-y "test/resource/linear/regression/single-feature.txt" double-func))
-
-(lr/perform-batch-gradient-decent (fs/normalize X) y 0.01 50)
+(defn- test-multiple-feature []
+  (let[X (r/parse-X "test/resource/linear/regression/multi-feature.txt" r/int-parser)
+       y (r/parse-y "test/resource/linear/regression/multi-feature.txt" r/int-parser)]
+    (lr/perform-batch-gradient-decent (fs/normalize X) y 0.01 1500)))
