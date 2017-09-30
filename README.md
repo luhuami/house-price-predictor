@@ -36,7 +36,9 @@ Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
 todo:
-1. find a way to read big data rather than using slurp. stream?
+1. find a way to read big data rather than using slurp which can only read data fit inside memory. stream?
 2. async read/process the data
 3. property based unit test case
-4. auto-recognize number of columns in a given data set. complete invoke code for linear regression
+4. better solution than loop-recur when gradient descent?
+5. use advanced optimization in lesson 3. need code for cost function.
+6. linear regression shares the same gradient descent function with logistic regression.
