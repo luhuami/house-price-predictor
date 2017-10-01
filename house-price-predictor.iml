@@ -28,6 +28,7 @@
     <orderEntry type="library" name="Leiningen: org.apache.poi/poi:3.14" level="project" />
     <orderEntry type="library" name="Leiningen: org.apache.xmlbeans/xmlbeans:2.6.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.8.0" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/math.numeric-tower:0.0.4" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.macro:0.1.5" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.12" level="project" />
     <orderEntry type="library" name="Leiningen: stax/stax-api:1.0.1" level="project" />
