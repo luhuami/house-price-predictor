@@ -11,12 +11,12 @@
 (def theta-vec [])
 
 (defn- calc-theta-vec [structure]
-  (reduce
-    #(conj %1 (matrix/new-matrix (second %2) (inc (first %2))))
-    []
-    (partition 2 1 structure)))
+  (reverse (reduce
+             #(conj %1 (matrix/new-matrix (second %2) (inc (first %2))))
+             (list)
+             (partition 2 1 structure))))
 
 (defn calc [x structure]
-  (let[theta-vec (calc-theta-vec structure)
-       activation-vec (fp/calc-activation-vec x theta-vec)]
+  (let [theta-seq (calc-theta-vec structure)
+        activation-seq (fp/calc-activation-vec x theta-seq)]
     ))
