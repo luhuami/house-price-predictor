@@ -22,7 +22,7 @@
     theta-seq))
 
 ;Remove a1 since it's x
-(defn calc-activation-vec [x theta-seq]
+(defn calc-activation-seq [x theta-seq]
   (let [activation-vec (forward-propagation x theta-seq)]
     (rest activation-vec)))
 

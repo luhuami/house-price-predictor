@@ -39,7 +39,7 @@
 
 ;activation-seq doesn't have a1 since it's x itself '(a2 a3 ... al)
 ;theta-seq is '(theta1 theta2 ... theta(l-1))
-(defn calc-one-step-gradient-decent-for-all-layers [theta-seq activation-seq y]
+(defn calc-one-delta-for-all-layers [theta-seq activation-seq y]
   (let [raw-delta-list (calc-delta-list theta-seq activation-seq y)
         delta-list (remove-bias-unit-delta raw-delta-list)
         a (drop-last activation-seq)]
