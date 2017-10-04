@@ -1,4 +1,4 @@
-(ns neural.networks.core
+(ns neural.networks.train-neural-networks
   (:require [clojure.core.matrix :as matrix]
             [neural.networks.forward-propagation :as fp]))
 
@@ -10,13 +10,13 @@
 
 (def theta-vec [])
 
-(defn- calc-theta-vec [structure]
+(defn- calc-theta-seq [structure]
   (reverse (reduce
              #(conj %1 (matrix/new-matrix (second %2) (inc (first %2))))
              (list)
              (partition 2 1 structure))))
 
 (defn calc [x structure]
-  (let [theta-seq (calc-theta-vec structure)
+  (let [theta-seq (calc-theta-seq structure)
         activation-seq (fp/calc-activation-vec x theta-seq)]
     ))
