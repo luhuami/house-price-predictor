@@ -9,17 +9,17 @@
 ;output layer has 10 nodes (output).
 (def neural-networks-structure [400 25 10])
 
-(defn- calc-theta-seq [structure]
+(defn- init-deltas [structure]
   (reverse (reduce
              #(conj %1 (matrix/new-matrix (second %2) (inc (first %2))))
              (list)
              (partition 2 1 structure))))
 
 (defn- calc-delta [theta-seq]
-  (fn [delta-seq train-pair]
-    (let [activation-seq (fp/calc-activation-seq (first train-pair) theta-seq)
-          new-delta-seq (bp/calc-one-delta-for-all-layers theta-seq activation-seq (last train-pair))]
-      (map (matrix/add %1 %2) delta-seq new-delta-seq))))
+  (fn [accumulated-deltas train-data]
+    (let [activations (fp/calc-activation-seq (first train-data) theta-seq)
+          new-deltas (bp/calc-deltas-for-one-training-data theta-seq activations (last train-data))]
+      (map (matrix/add %1 %2) accumulated-deltas new-deltas))))
 
 (defn- process-accumulated-delta [m, lambda]
   (fn process-delta [delta-matrix theta-matrix]
@@ -35,16 +35,16 @@
 ;Y matrix of result set
 ;theta-seq can be initial theta sequence
 ;TODO: X Y can be vector of vectors no need to be a matrix?
-(defn- calc-deltas [structure X Y theta-seq]
-  (let [initial-delta-seq (calc-theta-seq structure)
+(defn- calc-deltas [structure X Y thetas]
+  (let [initial-deltas (init-deltas structure)
         train-pairs (partition 2 (interleave (matrix/rows X) (matrix/rows Y)))]
     (reduce
-      (calc-delta theta-seq)
-      initial-delta-seq
+      (calc-delta thetas)
+      initial-deltas
       train-pairs)))
 
 ;TODO: add validation
-(defn calc-one-step-theta-directive [X Y theta-seq lambda]
-  (let [accumulated-delta-seq (calc-deltas neural-networks-structure X Y theta-seq)
+(defn calc-one-step-theta-directive [X Y thetas lambda]
+  (let [accumulated-deltas (calc-deltas neural-networks-structure X Y thetas)
         combine-fun (process-accumulated-delta (matrix/row-count X) lambda)]
-    (map combine-fun accumulated-delta-seq theta-seq)))
+    (map combine-fun accumulated-deltas thetas)))
