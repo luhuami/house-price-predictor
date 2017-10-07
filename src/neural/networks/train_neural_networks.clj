@@ -9,11 +9,20 @@
 ;output layer has 10 nodes (output).
 (def neural-networks-structure [400 25 10])
 
-(defn- init-deltas [structure]
+;used in standford machine learning course
+(def epsilon 0.12)
+
+(defn- init-based-on-structure [structure]
   (reverse (reduce
              #(conj %1 (matrix/new-matrix (second %2) (inc (first %2))))
              (list)
              (partition 2 1 structure))))
+
+(defn- gen-random-theta []
+  (- (* 2 (rand) epsilon) epsilon))
+
+(defn- init-theta [structure]
+  (map #(matrix/emap gen-random-theta %) (init-based-on-structure structure)))
 
 (defn- calc-delta [theta-seq]
   (fn [accumulated-deltas train-data]
@@ -36,7 +45,7 @@
 ;theta-seq can be initial theta sequence
 ;TODO: X Y can be vector of vectors no need to be a matrix?
 (defn- calc-deltas [structure X Y thetas]
-  (let [initial-deltas (init-deltas structure)
+  (let [initial-deltas (init-based-on-structure structure)
         train-pairs (partition 2 (interleave (matrix/rows X) (matrix/rows Y)))]
     (reduce
       (calc-delta thetas)
