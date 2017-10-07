@@ -1,10 +1,8 @@
 (ns neural.networks.backward-propagation
   (:require [clojure.core.matrix :as matrix]))
 
-;TODO: generalize this function
 (defn- create-ones [dimension-vec]
-  (let [m (matrix/new-matrix (first dimension-vec) (last dimension-vec))]
-    (matrix/fill m 1)))
+  (matrix/fill (matrix/new-matrix (first dimension-vec) (last dimension-vec)) 1))
 
 (defn- calc-delta-for-one-layer [delta-list theta-activation-pair]
   (let [next-layer-delta (first delta-list)
