@@ -14,18 +14,13 @@
     (conj activation-vec (add-bias-to-activation a))))
 
 ;x must be a vector. One row of X.
-;Return [a1 a2 a3 ... an]
-(defn- forward-propagation [x theta-seq]
+;Return [a1 a2 a3 ... al]
+(defn calc-activation-seq [x theta-seq]
   (reduce
     calc-next-activation
     [(add-bias-to-activation (matrix/transpose [x]))]
     theta-seq))
 
-;Remove a1 since it's x
-(defn calc-activation-seq [x theta-seq]
-  (let [activation-vec (forward-propagation x theta-seq)]
-    (rest activation-vec)))
-
 ;TODO: no need to store all activations in this case
 (defn calc [x theta-seq]
-  (last (forward-propagation x theta-seq)))
+  (last (calc-activation-seq x theta-seq)))

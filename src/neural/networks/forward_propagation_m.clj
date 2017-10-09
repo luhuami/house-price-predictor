@@ -17,18 +17,13 @@
     (conj activation-vec (add-bias-to-activation a))))
 
 ;X is a m*n matrix
-;Return [a1 a2 a3 ... an]
-(defn- forward-propagation [X theta-seq]
+;Return [a1 a2 a3 ... al]
+(defn calc-activation-seq [X theta-seq]
   (reduce
     calc-next-activation
     [(add-bias-to-activation X)]
     theta-seq))
 
-;Remove a1 since it's X
-(defn calc-activation-seq [X theta-seq]
-  (let [activation-vec (forward-propagation X theta-seq)]
-    (rest activation-vec)))
-
 ;TODO: no need to store all activations in this case
 (defn calc [x theta-seq]
-  (last (forward-propagation x theta-seq)))
+  (last (calc-activation-seq x theta-seq)))

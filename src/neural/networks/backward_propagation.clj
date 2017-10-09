@@ -13,11 +13,11 @@
     (conj delta-list (matrix/emul temp activation (matrix/sub ones activation)))))
 
 ;drop the theta1 as don't need to calc delta1
-;drop al as it's not needed to calc a(l-1)
+;drop aL as it's already used to calculate delta-L
 (defn- generate-theta-activation-pairs [theta-seq activation-seq]
   (partition 2 (interleave (drop 1 theta-seq) (drop-last activation-seq))))
 
-;Length of both theta-seq and activation-seq should be l-1
+;Length of both theta-seq and activation-seq should be L-1
 (defn- calc-deltas [theta-seq activation-seq y]
   (reduce
     calc-delta-for-one-layer
@@ -35,9 +35,9 @@
 (defn- calc-one-step-gradient-decent [next-layer-delta activation]
   (matrix/mmul next-layer-delta (matrix/transpose activation)))
 
-;activation-seq doesn't have a1 since it's x itself '(a2 a3 ... al)
-;theta-seq is '(theta1 theta2 ... theta(l-1))
+;activation-seq '(a1 a2 a3 ... aL)
+;theta-seq is '(theta1 theta2 ... theta(L-1))
 (defn calc-deltas-for-one-training-data [theta-seq activation-seq y]
-  (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq activation-seq y))
+  (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq (rest activation-seq) y))
         a (drop-last activation-seq)]
     (map calc-one-step-gradient-decent delta-list a)))
