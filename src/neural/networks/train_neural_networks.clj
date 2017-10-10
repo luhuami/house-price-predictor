@@ -30,8 +30,8 @@
           new-deltas (bp/calc-deltas-for-one-training-data theta-seq activations (last train-data))]
       (map (matrix/add %1 %2) accumulated-deltas new-deltas))))
 
-(defn- process-accumulated-delta [m, lambda]
-  (fn process-delta [delta-matrix theta-matrix]
+(defn- regularize-accumulated-delta [m, lambda]
+  (fn [delta-matrix theta-matrix]
     (let [processed-delta-matrix (matrix/mul (/ 1 m) delta-matrix)
           last-column-index (dec (matrix/column-count processed-delta-matrix))
           first-column-delta (matrix/submatrix processed-delta-matrix 1 [0 1])
@@ -55,5 +55,5 @@
 ;TODO: add validation
 (defn calc-one-step-theta-directive [X Y thetas lambda]
   (let [accumulated-deltas (calc-deltas neural-networks-structure X Y thetas)
-        combine-fun (process-accumulated-delta (matrix/row-count X) lambda)]
-    (map combine-fun accumulated-deltas thetas)))
+        calc-theta-descent (regularize-accumulated-delta (matrix/row-count X) lambda)]
+    (map calc-theta-descent accumulated-deltas thetas)))
