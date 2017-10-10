@@ -18,13 +18,13 @@
              (list)
              (partition 2 1 structure))))
 
-(defn- gen-random-theta []
+(defn- gen-random-epsilon []
   (- (* 2 (rand) epsilon) epsilon))
 
 (defn- init-theta [structure]
-  (map #(matrix/emap gen-random-theta %) (init-based-on-structure structure)))
+  (map #(matrix/emap gen-random-epsilon %) (init-based-on-structure structure)))
 
-(defn- process-accumulated-delta [m, lambda]
+(defn- process-big-delta [m, lambda]
   (fn process-delta [big-delta theta-matrix]
     (let [processed-big-delta (matrix/mul (/ 1 m) big-delta)
           last-column-index (dec (matrix/column-count processed-big-delta))
@@ -46,5 +46,5 @@
 ;return '(D1 D2 ... D(L-1))
 (defn calc-one-step-theta-directive [X Y thetas lambda]
   (let [big-deltas (calc-big-deltas neural-networks-structure X Y thetas)
-        combine-fun (process-accumulated-delta (matrix/row-count X) lambda)]
-    (map combine-fun big-deltas thetas)))
+        calc-theta-derivative (process-big-delta (matrix/row-count X) lambda)]
+    (map calc-theta-derivative big-deltas thetas)))

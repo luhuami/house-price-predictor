@@ -1,23 +1,22 @@
 (ns neural.networks.backward-propagation-m
-  (:require [clojure.core.matrix :as matrix]))
-
-(defn- create-ones [dimension-vec]
-  (matrix/fill (matrix/new-matrix (first dimension-vec) (last dimension-vec)) 1))
+  (:require [clojure.core.matrix :as matrix]
+            [utils.matrix :as utils]))
 
 (defn- calc-delta-for-one-layer [delta-list theta-activation-pair]
   (let [next-layer-delta (first delta-list)
         theta (first theta-activation-pair)
         activation (second theta-activation-pair)
         temp (matrix/mmul next-layer-delta theta)
-        ones (create-ones (matrix/shape activation))]
+        ones (utils/create-matrix-with-value (matrix/shape activation) 1)]
     (conj delta-list (matrix/emul temp activation (matrix/sub ones activation)))))
 
-;drop the theta1 as don't need to calc delta-1.
+;drop the theta-1 and a1 as don't need to calc delta1
 ;drop aL as it's already used to calculate delta-L.
-(defn- generate-theta-activation-pairs [theta-seq activation-seq]
-  (partition 2 (interleave (drop 1 theta-seq) (drop-last activation-seq))))
+(defn- generate-theta-activation-pairs [theta-seq activations]
+  (partition 2 (interleave (drop 1 theta-seq) (drop-last (rest activations)))))
 
-;Length of both theta-seq and activation-seq should be L-1
+;Length of theta-seq should be L-1
+;Length of activation-seq should be L
 (defn- calc-deltas [theta-seq activation-seq Y]
   (reduce
     calc-delta-for-one-layer
@@ -40,6 +39,5 @@
 ;theta-seq '(theta1 theta2 ... theta(L-1))
 ;return '(big-delta1 big-delta2 ... big-delta(L-1))
 (defn calc-deltas-for-all-training-data [theta-seq activation-seq Y]
-  (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq (rest activation-seq) Y))
-        a (drop-last activation-seq)]
-    (map calc-big-delta delta-list a)))
+  (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq activation-seq Y))]
+    (map calc-big-delta delta-list (drop-last activation-seq))))
