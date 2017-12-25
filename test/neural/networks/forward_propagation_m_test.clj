@@ -17,25 +17,28 @@
 (defn- sigmoid-mock [m]
   m)
 
-;TODO
 (deftest test-calc-next-activation
   (testing ""
     (let [calc-next-activation #'fp/calc-next-activation]
-      (is (= [[1 38.0 59.0 26.0 37.0] [1 47.0 78.0 41.0 42.0] [1 54.0 91.0 49.0 47.0]]
-             (with-redefs-fn
-               {#'lr/sigmoid sigmoid-mock}
-               #(calc-next-activation [[1 2 6] [1 4 7] [1 5 8]] [[4 2 5] [5 6 7] [6 7 1] [7 0 5]]))))
-      (is (= [[1 17.0 11.0 19.0 12.0] [1 12.0 8.0 14.0 9.0]]
-             (with-redefs-fn
-               {#'lr/sigmoid sigmoid-mock}
-               #(calc-next-activation [[1 2 4] [1 1 3]] [[1 2 3] [3 2 1] [1 1 4] [2 1 2]])))))))
+      (with-redefs-fn
+        {#'lr/sigmoid sigmoid-mock}
+        #(and
+           (is (= (calc-next-activation [[1 2 6] [1 4 7] [1 5 8]] [[4 2 5] [5 6 7] [6 7 1] [7 0 5]])
+                  [[1 38.0 59.0 26.0 37.0] [1 47.0 78.0 41.0 42.0] [1 54.0 91.0 49.0 47.0]]))
+           (is (= (calc-next-activation [[1 2 4] [1 1 3]] [[1 2 3] [3 2 1] [1 1 4] [2 1 2]])
+                  [[1 17.0 11.0 19.0 12.0] [1 12.0 8.0 14.0 9.0]])))))))
 
-(defn- calc-next-activation-mock[a theta]
+(defn- calc-next-activation-mock [a theta]
   (matrix/mmul a theta))
 
 (deftest test-gen-activations
   (testing ""
-    (let [gen-activations #'fp/gen-activations]
+    (let [gen-activations #'fp/gen-activations
+          theta [[3 1] [4 1]]
+          a1 [[1 3] [1 2]]
+          a2 [[2 4] [3 6]]]
       (with-redefs-fn
         {#'fp/calc-next-activation calc-next-activation-mock}
-        #(is (= (gen-activations [[[1 3] [1 2]]] [[3 1] [4 1]]) [[[1 3] [1 2]] [[15.0 4.0] [11.0 3.0]]]))))))
+        #(and
+           (is (= (gen-activations [a1] theta) [a1 [[15.0 4.0] [11.0 3.0]]]))
+           (is (= (gen-activations [a1 a2] theta) [a1 a2 [[22.0 6.0] [33.0 9.0]]])))))))
