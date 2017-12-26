@@ -10,10 +10,10 @@
         ones (utils/create-matrix-with-value (matrix/shape activation) 1)]
     (conj delta-list (matrix/emul temp activation (matrix/sub ones activation)))))
 
-;drop the theta-1 and a1 as don't need to calc delta1
-;drop aL as it's already used to calculate delta-L.
+;drop theta1 and a1 as don't need to calc delta1
+;drop aL as it's already used to calculate deltaL
 (defn- generate-theta-activation-pairs [theta-seq activations]
-  (partition 2 (interleave (drop 1 theta-seq) (drop-last (rest activations)))))
+  (partition 2 (interleave (rest theta-seq) (drop-last (rest activations)))))
 
 ;Length of theta-seq should be L-1
 ;Length of activation-seq should be L
