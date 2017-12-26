@@ -23,12 +23,9 @@
     (list (matrix/sub (last activation-seq) Y))
     (reverse (generate-theta-activation-pairs theta-seq activation-seq))))
 
-(defn- remove-bias [delta-matrix]
-  (matrix/submatrix delta-matrix 1 [1 (dec (matrix/row-count delta-matrix))]))
-
 (defn- remove-bias-for-deltas [delta-list]
   (map-indexed
-    #((if (< %1 (dec (count delta-list))) (remove-bias %2)))
+    #((if (< %1 (dec (count delta-list))) (utils/remove-first-column %2)))
     delta-list))
 
 (defn- calc-big-delta [next-layer-delta activation]
