@@ -4,9 +4,9 @@
             [logistic-regression :as lr]
             [clojure.core.matrix :as matrix]))
 
-(deftest test-add-bias-to-activation
+(deftest test-add-bias
   (testing "add-bias-to-activation should add a new column of 1 to a given matrix"
-    (let [add-bias #'fp/add-bias-to-activation]
+    (let [add-bias #'fp/add-bias]
       (is (= [[1 2 5] [1 3 6] [1 4 7]] (add-bias [[2 5] [3 6] [4 7]])))
       (is (= [[1 2 5 0] [1 3 6 4] [1 4 7 1]] (add-bias [[2 5 0] [3 6 4] [4 7 1]])))
       (is (= [[1 1] [1 2] [1 3]] (add-bias [[1] [2] [3]])))
@@ -28,17 +28,13 @@
            (is (= (calc-next-activation [[1 2 4] [1 1 3]] [[1 2 3] [3 2 1] [1 1 4] [2 1 2]])
                   [[1 17.0 11.0 19.0 12.0] [1 12.0 8.0 14.0 9.0]])))))))
 
-(defn- calc-next-activation-mock [a theta]
-  (matrix/mmul a theta))
-
-(deftest test-gen-activations
+(deftest test-calc-activation-seq
   (testing ""
-    (let [gen-activations #'fp/gen-activations
-          theta [[3 1] [4 1]]
-          a1 [[1 3] [1 2]]
-          a2 [[2 4] [3 6]]]
-      (with-redefs-fn
-        {#'fp/calc-next-activation calc-next-activation-mock}
-        #(and
-           (is (= (gen-activations [a1] theta) [a1 [[15.0 4.0] [11.0 3.0]]]))
-           (is (= (gen-activations [a1 a2] theta) [a1 a2 [[22.0 6.0] [33.0 9.0]]])))))))
+    (let [X [[1 2 1] [2 1 2] [3 1 1]]
+          theta1 [[2 1 0 1] [1 2 1 0]]
+          theta2 [1 2 2]]
+      (with-redefs-fn {#'lr/sigmoid sigmoid-mock}
+        #(is (= (fp/calc-activation-seq X [theta1 theta2])
+                '([[1 1 2 1] [1 2 1 2] [1 3 1 1]]
+                  [[1 4.0 5.0] [1 6.0 6.0] [1 6.0 8.0]]
+                  [[19.0] [25.0] [29.0]])))))))

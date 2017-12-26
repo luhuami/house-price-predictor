@@ -3,28 +3,27 @@
             [utils.matrix :as utils])
   (:use [logistic-regression :only (sigmoid)]))
 
-(defn- add-bias-to-activation [a]
-  (matrix/join-along 1 (utils/create-matrix-with-value [(matrix/row-count a) 1] 1) a))
+(defn- add-bias [a]
+  (matrix/join-along
+    1
+    (utils/create-matrix-with-value [(matrix/row-count a) 1] 1) a))
 
 ;Calculate next layer's activation and attach bias unit.
 ;The given activation must include the bias unit so it is a m*(n+1) matrix.
 (defn- calc-next-activation [current-activation theta]
   (let [z (matrix/mmul current-activation (matrix/transpose theta))
         a (matrix/emap sigmoid z)]
-    (add-bias-to-activation a)))
+    (add-bias a)))
 
-(defn- gen-activations [activation-vec theta]
-  (let [current-activation (last activation-vec)]
-    (conj activation-vec (calc-next-activation current-activation theta))))
+(defn- remove-bias-for-last-matrix [activations]
+  (concat (drop-last activations)
+          (list (utils/remove-first-column (last activations)))))
 
-;X is training data, a m*n matrix
-;Return [a1 a2 a3 ... aL]
 (defn calc-activation-seq [X theta-seq]
-  (reduce
-    gen-activations
-    [(add-bias-to-activation X)]
-    theta-seq))
+  (remove-bias-for-last-matrix (reductions
+                                 calc-next-activation
+                                 (add-bias X)
+                                 theta-seq)))
 
-;TODO: no need to store all activations in this case
 (defn predict [x theta-seq]
   (last (calc-activation-seq x theta-seq)))
