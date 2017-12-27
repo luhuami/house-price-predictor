@@ -38,3 +38,16 @@
   (testing ""
     (is (= (#'bp/remove-bias-for-deltas (list a1 a2 a3))
            (list a1 [[13] [14]] [[14] [15]])))))
+
+(def t1 [[1 1 0 2] [2 0 1 1]])
+(def t2 [[3 2 1]])
+(def ac1 [[1 2 1 0] [2 1 1 0] [1 3 0 1]])
+(def ac2 [[1 1 2] [2 2 1] [1 1 3]])
+(def ac3 [[3] [1] [4]])
+(def Y [[2] [3] [1]])
+
+
+(deftest test-calc-deltas-for-all-training-data
+  (testing ""
+    (is (= (bp/calc-deltas-for-all-training-data (list t1 t2) (list ac1 ac2 ac3) Y)
+           (list [[16.0 8.0 8.0 0.0] [-20.0 -58.0 -2.0 -18.0]] [[0.0 0.0 9.0]])))))
