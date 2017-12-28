@@ -26,16 +26,16 @@
   (let [temp (map #(matrix/mul alpha %) one-step-directive)]
     (map matrix/sub theta temp)))
 
-;TODO: this way may lead to local optimized point. should find out alternative of fmincg instead.
+;TODO: using gradient decent may lead to local optimized point. should find out alternative of fmincg instead.
 ;TODO: add validation
 ;X matrix of training set
 ;Y matrix of result set
-;theta-seq can be initial theta sequence
-(defn perform-batch-gradient-decent [X Y alpha lambda iter]
+;iter number of iteration
+(defn train-theta [X Y alpha lambda iter]
   (loop [i 0
-         Theta (init-theta neural-networks-structure)]
+         theta-seq (init-theta neural-networks-structure)]
     (if (= i iter)
-      Theta
+      theta-seq
       (recur
         (inc i)
-        (perform-one-step-theta-directive alpha Theta (bp/calc-theta-directives X Y Theta lambda))))))
+        (perform-one-step-theta-directive alpha theta-seq (bp/calc-theta-directives X Y theta-seq lambda))))))
