@@ -16,7 +16,7 @@
   (map #(matrix/new-matrix (second %) (inc (first %)))
        (partition 2 1 structure)))
 
-(defn- gen-random-epsilon []
+(defn- gen-random-epsilon [_]
   (- (* 2 (rand) epsilon) epsilon))
 
 (defn- init-theta [structure]
