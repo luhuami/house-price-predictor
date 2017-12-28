@@ -2,7 +2,7 @@
   (:require [clojure.core.matrix :as matrix]
             [utils.matrix :as utils]))
 
-(defn- calc-delta [next-layer-delta theta-activation-pair]
+(defn- calc-small-delta [next-layer-delta theta-activation-pair]
   (let [theta (first theta-activation-pair)
         activation (second theta-activation-pair)
         temp (matrix/mmul next-layer-delta theta)
@@ -17,9 +17,9 @@
 ;Length of theta-seq should be L-1
 ;Length of activation-seq should be L
 ;returns deltaL, delta(L-1) ... delta2
-(defn- calc-deltas [theta-seq activation-seq Y]
+(defn- calc-small-deltas [theta-seq activation-seq Y]
   (reductions
-    calc-delta
+    calc-small-delta
     (matrix/sub (last activation-seq) Y)
     (reverse (generate-theta-activation-pairs theta-seq activation-seq))))
 
@@ -29,10 +29,22 @@
 (defn- calc-big-delta [next-layer-delta activation]
   (matrix/mmul (matrix/transpose next-layer-delta) activation))
 
-;L is the total number of layers including input layer and output layer
+(defn- calc-big-deltas [theta-seq activation-seq Y]
+  (let [small-delta-seq (remove-bias-for-deltas (calc-small-deltas theta-seq activation-seq Y))]
+    (map calc-big-delta (reverse small-delta-seq) (drop-last activation-seq))))
+
+(defn- regularize-element [m lambda]
+  (fn [index big-delta theta]
+    (let [d (/ big-delta m)]
+      (if (not= 0 (last index))
+        (+ d (* lambda (/ theta m)))
+        d))))
+
+;Given L is the total number of layers including input layer and output layer
 ;activation-seq '(a1 a2 a3 ... aL)
 ;theta-seq '(theta1 theta2 ... theta(L-1))
 ;return '(big-delta1 big-delta2 ... big-delta(L-1))
-(defn calc-big-deltas [theta-seq activation-seq Y]
-  (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq activation-seq Y))]
-    (map calc-big-delta (reverse delta-list) (drop-last activation-seq))))
+(defn calc-theta-directives [theta-seq activation-seq Y lambda]
+  (let [big-delta-seq (calc-big-deltas theta-seq activation-seq Y)
+        regularize (regularize-element (matrix/row-count Y) lambda)]
+    (map #(matrix/emap-indexed regularize %1 %2) big-delta-seq theta-seq)))

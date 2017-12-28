@@ -11,9 +11,9 @@
 (def a3 [[13 14] [14 15]])
 (def a4 [[8 9] [17 11]])
 
-(deftest test-calc-delta
+(deftest test-calc-small-delta
   (testing ""
-    (let [calc-delta #'bp/calc-delta
+    (let [calc-delta #'bp/calc-small-delta
           delta [[1 2 3] [0 1 1]]
           theta [[1 1] [2 0] [2 1]]]
       (is (= (calc-delta delta (list theta a1)) [[-66.0 0.0] [0.0 -2.0]])))))
@@ -24,14 +24,14 @@
       (= (#'bp/generate-theta-activation-pairs (list theta1 theta2 theta3) (list a1 a2 a3 a4))
          (list (list theta2 a2) (list theta3 a3))))))
 
-(defn mock-calc-delta [delta theta-activation-pair]
+(defn mock-calc-small-delta [delta theta-activation-pair]
   (matrix/add delta (first theta-activation-pair) (second theta-activation-pair)))
 
 
-(deftest test-calc-deltas
+(deftest test-calc-big-deltas
   (testing ""
-    (with-redefs-fn {#'bp/calc-delta mock-calc-delta}
-      #(is (= (#'bp/calc-deltas (list theta1 theta2 theta3) (list a1 a2 a3 a4) [[1 2] [3 4]])
+    (with-redefs-fn {#'bp/calc-small-delta mock-calc-small-delta}
+      #(is (= (#'bp/calc-small-deltas (list theta1 theta2 theta3) (list a1 a2 a3 a4) [[1 2] [3 4]])
               '([[7 7] [14 7]] [[22 25] [33 28]] [[36 41] [49 46]]))))))
 
 (deftest test-remove-bias-for-deltas
@@ -46,8 +46,7 @@
 (def ac3 [[3] [1] [4]])
 (def Y [[2] [3] [1]])
 
-
-(deftest test-calc-deltas-for-all-training-data
+(deftest test-calc-big-deltas
   (testing ""
-    (is (= (bp/calc-big-deltas (list t1 t2) (list ac1 ac2 ac3) Y)
+    (is (= (#'bp/calc-big-deltas (list t1 t2) (list ac1 ac2 ac3) Y)
            (list [[16.0 8.0 8.0 0.0] [-20.0 -58.0 -2.0 -18.0]] [[0.0 0.0 9.0]])))))
