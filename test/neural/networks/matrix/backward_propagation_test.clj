@@ -51,6 +51,12 @@
     (is (= (#'bp/calc-big-deltas (list t1 t2) (list ac1 ac2 ac3) Y)
            (list [[48.0 24.0 24.0 0.0] [-21.0 -57.0 -6.0 -18.0]] [[0.0 -2.0 9.0]])))))
 
+(deftest test-regularize-element
+  (testing ""
+    (let [regularize (#'bp/regularize-element 2 1)]
+      (is (= (regularize [1 0] 4 2)) 2)
+      (is (= (regularize [3 1] 4 2)) 3))))
+
 (deftest test-calc-theta-directives
   (testing ""
     (is (= (bp/calc-theta-directives (list t1 t2) (list ac1 ac2 ac3) Y 1.5))
