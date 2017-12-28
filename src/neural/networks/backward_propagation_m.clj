@@ -33,6 +33,6 @@
 ;activation-seq '(a1 a2 a3 ... aL)
 ;theta-seq '(theta1 theta2 ... theta(L-1))
 ;return '(big-delta1 big-delta2 ... big-delta(L-1))
-(defn calc-deltas-for-all-training-data [theta-seq activation-seq Y]
+(defn calc-big-deltas [theta-seq activation-seq Y]
   (let [delta-list (remove-bias-for-deltas (calc-deltas theta-seq activation-seq Y))]
     (map calc-big-delta (reverse delta-list) (drop-last activation-seq))))

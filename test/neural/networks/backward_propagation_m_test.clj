@@ -49,5 +49,5 @@
 
 (deftest test-calc-deltas-for-all-training-data
   (testing ""
-    (is (= (bp/calc-deltas-for-all-training-data (list t1 t2) (list ac1 ac2 ac3) Y)
+    (is (= (bp/calc-big-deltas (list t1 t2) (list ac1 ac2 ac3) Y)
            (list [[16.0 8.0 8.0 0.0] [-20.0 -58.0 -2.0 -18.0]] [[0.0 0.0 9.0]])))))
