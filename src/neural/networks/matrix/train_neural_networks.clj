@@ -1,7 +1,7 @@
-(ns neural.networks.train-neural-networks-m
+(ns neural.networks.matrix.train-neural-networks
   (:require [clojure.core.matrix :as matrix]
-            [neural.networks.forward-propagation-m :as fp]
-            [neural.networks.backward-propagation-m :as bp]))
+            [neural.networks.matrix.forward-propagation :as fp]
+            [neural.networks.matrix.backward-propagation :as bp]))
 
 ;number of neural in each layer excluding bias node. layer num starts from 1.
 ;[400 25 10] represents a 3 layers neural networks.

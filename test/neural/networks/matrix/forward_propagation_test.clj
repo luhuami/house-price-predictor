@@ -1,8 +1,7 @@
-(ns neural.networks.forward-propagation-m-test
+(ns neural.networks.matrix.forward-propagation-test
   (:require [clojure.test :refer :all]
-            [neural.networks.forward-propagation-m :as fp]
-            [logistic-regression :as lr]
-            [clojure.core.matrix :as matrix]))
+            [neural.networks.matrix.forward-propagation :as fp]
+            [logistic-regression :as lr]))
 
 (deftest test-add-bias
   (testing "add-bias-to-activation should add a new column of 1 to a given matrix"

@@ -1,4 +1,4 @@
-(ns neural.networks.forward-propagation-m
+(ns neural.networks.matrix.forward-propagation
   (:require [clojure.core.matrix :as matrix]
             [utils.matrix :as utils])
   (:use [logistic-regression :only (sigmoid)]))

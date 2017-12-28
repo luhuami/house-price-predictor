@@ -1,6 +1,6 @@
-(ns neural.networks.backward-propagation-m-test
+(ns neural.networks.matrix.backward-propagation-test
   (:require [clojure.test :refer :all]
-            [neural.networks.backward-propagation-m :as bp]
+            [neural.networks.matrix.backward-propagation :as bp]
             [clojure.core.matrix :as matrix]))
 
 (def theta1 [[1 2] [2 3]])

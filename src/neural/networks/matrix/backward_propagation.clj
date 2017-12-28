@@ -1,4 +1,4 @@
-(ns neural.networks.backward-propagation-m
+(ns neural.networks.matrix.backward-propagation
   (:require [clojure.core.matrix :as matrix]
             [utils.matrix :as utils]))
 

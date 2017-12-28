@@ -1,4 +1,4 @@
-(ns neural.networks.backward-propagation
+(ns neural.networks.iteration.backward-propagation
   (:require [clojure.core.matrix :as matrix]))
 
 (defn- create-ones [dimension-vec]
