@@ -22,11 +22,11 @@
 (defn- init-theta [structure]
   (map #(matrix/emap gen-random-epsilon %) (create-theta-matrix structure)))
 
-(defn- perform-one-step-theta-directive [alpha theta one-step-directive]
+(defn- apply-theta-directive [alpha theta one-step-directive]
   (let [temp (map #(matrix/mul alpha %) one-step-directive)]
     (map matrix/sub theta temp)))
 
-;TODO: using gradient decent may lead to local optimized point. should find out alternative of fmincg instead.
+;TODO: using gradient decent may lead to local optimized point. should find out an alternative of fmincg.
 ;TODO: add validation
 ;X matrix of training set
 ;Y matrix of result set
@@ -38,4 +38,4 @@
       theta-seq
       (recur
         (inc i)
-        (perform-one-step-theta-directive alpha theta-seq (bp/calc-theta-directives X Y theta-seq lambda))))))
+        (apply-theta-directive alpha theta-seq (bp/calc-theta-directives X Y theta-seq lambda))))))
